@@ -1,0 +1,1 @@
+necesito que exista alguna correlacion entre los datos y que no sean datos sueltos. te propongo que hagamos un cambio en la logica del programa y que se pase a registrar solo uisuarios y reportes de estado de la entrega o transporte. de manera que los usuarios empleados puedan registrar 

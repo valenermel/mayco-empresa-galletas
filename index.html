@@ -1,1 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Mayco</title>
+</head>
+<body>
+    <h1>Iniciar Sesión o Registrarse</h1>
+    
+    <!-- Campos de inicio de sesión/registro -->
+    <div id="loginContainer">
+        <input type="text" id="username" placeholder="Usuario" required>
+        <input type="password" id="password" placeholder="Contraseña" required>
+        <select id="role">
+            <option value="employee">Empleado</option>
+            <option value="admin">Administrador</option>
+        </select>
+        <button onclick="register()" id="registerButton">Registrarse</button>
+        <button onclick="login()" id="loginButton">Iniciar Sesión</button>
+    </div>
 
+    <!-- Botón de cambio de cuenta, inicialmente oculto -->
+    <button onclick="changeAccount()" id="changeAccountButton" style="display: none;">Cambiar de Cuenta</button>
+
+    <!-- Panel para empleados -->
+    <div id="employeePanel" style="display: none;">
+        <h2>Panel de Empleado</h2>
+        <p>Opciones para resolver problemas de envío:</p>
+        <ul>
+            <li>
+                <button onclick="registerMerchandiseStatus()">Registrar estado de la mercadería</button>
+            </li>
+            <li>
+                <button onclick="registerTruckLocation()">Registrar ubicación del camión</button>
+            </li>
+            <li>
+                <button onclick="reportTheft()">Alertar en caso de robo</button>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Panel para administradores -->
+    <div id="adminPanel" style="display: none;">
+        <h2>Panel de Administrador</h2>
+        <p>Control completo de camiones y logística:</p>
+        <ul>
+            <li>
+                <button onclick="viewTrucks()">Ver todos los camiones</button>
+            </li>
+            <li>
+                <button onclick="superviseDeliveries()">Supervisar las entregas</button>
+            </li>
+            <li>
+                <button onclick="accessIncidentReports()">Acceso a reportes de incidentes</button>
+            </li>
+        </ul>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
