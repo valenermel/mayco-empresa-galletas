@@ -1,26 +1,35 @@
 <?php
-include 'db.php';
+session_start();
+include 'db.php'; // Archivo para la conexión a la base de datos
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-    $role = $_POST['role'] ?? 'employee';
+$data = json_decode(file_get_contents("php://input"), true);
+$username = $data['username'];
+$password = $data['password'];
+$profession = $data['profession'];
 
-    // Verificar si el usuario ya existe
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
-    $stmt->execute([$username]);
-    if ($stmt->rowCount() > 0) {
-        echo json_encode(['message' => 'El usuario ya existe.']);
-        exit;
-    }
+// Verificar si el nombre de usuario ya existe
+$sql = "SELECT * FROM users WHERE username = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$result = $stmt->get_result();
 
-    // Hashear la contraseña y registrar al usuario
-    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-    $stmt = $pdo->prepare("INSERT INTO users (username, password, role) VALUES (?, ?, ?)");
-    if ($stmt->execute([$username, $hashedPassword, $role])) {
-        echo json_encode(['message' => 'Usuario registrado exitosamente.']);
+if ($result->num_rows > 0) {
+    echo json_encode(["success" => false, "message" => "El nombre de usuario ya existe."]);
+} else {
+    // Insertar el nuevo usuario
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    $sql = "INSERT INTO users (username, password, profession) VALUES (?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sss", $username, $hashedPassword, $profession);
+    
+    if ($stmt->execute()) {
+        echo json_encode(["success" => true, "message" => "Registro exitoso."]);
     } else {
-        echo json_encode(['message' => 'Error al registrar usuario.']);
+        echo json_encode(["success" => false, "message" => "Error al registrar el usuario."]);
     }
 }
+
+$stmt->close();
+$conn->close();
 ?>

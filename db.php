@@ -1,13 +1,14 @@
 <?php
-$host = 'localhost'; // Cambia esto si tu base de datos está en otro servidor
-$db = 'mayco_app';
-$user = 'root'; // Reemplaza con tu usuario de la base de datos
-$pass = ''; // Reemplaza con tu contraseña de la base de datos
+$servername = "localhost"; // Cambia esto según tu configuración
+$username = "root"; // Cambia esto a tu usuario de la base de datos
+$password = ""; // Cambia esto a tu contraseña de la base de datos
+$dbname = "mayco_control";
 
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8", $user, $pass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    echo 'Error de conexión: ' . $e->getMessage();
+// Crear conexión
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Comprobar conexión
+if ($conn->connect_error) {
+    die("Conexión fallida: " . $conn->connect_error);
 }
 ?>

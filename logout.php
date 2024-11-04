@@ -1,5 +1,6 @@
 <?php
 session_start();
-session_destroy();
-echo json_encode(['message' => 'Sesión cerrada exitosamente.']);
+session_unset(); // Limpiar todas las variables de sesión
+session_destroy(); // Destruir la sesión
+echo json_encode(["success" => true]);
 ?>

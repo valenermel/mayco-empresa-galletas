@@ -1,22 +1,30 @@
 <?php
-include 'db.php';
+session_start();
+include 'db.php'; // Archivo para la conexión a la base de datos
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+$data = json_decode(file_get_contents("php://input"), true);
+$username = $data['username'];
+$password = $data['password'];
 
-    // Verificar si el usuario existe
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
-    $stmt->execute([$username]);
-    $user = $stmt->fetch();
+// Consulta para verificar el usuario
+$sql = "SELECT * FROM users WHERE username = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$result = $stmt->get_result();
 
-    if ($user && password_verify($password, $user['password'])) {
-        session_start();
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['role'] = $user['role'];
-        echo json_encode(['message' => 'Inicio de sesión exitoso.', 'role' => $user['role']]);
+if ($result->num_rows > 0) {
+    $user = $result->fetch_assoc();
+    // Verificar la contraseña
+    if (password_verify($password, $user['password'])) {
+        $_SESSION['username'] = $username; // Guardar el nombre de usuario en la sesión
+        echo json_encode(["success" => true]);
     } else {
-        echo json_encode(['message' => 'Usuario o contraseña incorrectos.']);
+        echo json_encode(["success" => false, "message" => "Contraseña incorrecta."]);
     }
+} else {
+    echo json_encode(["success" => false, "message" => "Usuario no encontrado."]);
 }
+$stmt->close();
+$conn->close();
 ?>
